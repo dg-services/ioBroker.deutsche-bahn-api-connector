@@ -14,9 +14,9 @@ systemDictionary = {
 		"pl": "Ustawienia adaptera dla deutsche-bahn-api-connector",
 		"zh-cn": "deutsche-bahn-api-connector的适配器设置"
 	},
-	"option1": {
-		"en": "option1",
-		"de": "option1",
+	"evaID": {
+		"en": "Train Station ID",
+		"de": "BahnhofsID",
 		"ru": "option1",
 		"pt": "option1",
 		"nl": "option1",
@@ -26,9 +26,9 @@ systemDictionary = {
 		"pl": "option1",
 		"zh-cn": "option1"
 	},
-	"option2": {
-		"en": "option2",
-		"de": "option2",
+	"authTooken": {
+		"en": "AuthTooken",
+		"de": "AuthTooken",
 		"ru": "option2",
 		"pt": "option2",
 		"nl": "option2",
