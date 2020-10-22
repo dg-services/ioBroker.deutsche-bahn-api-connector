@@ -1,0 +1,40 @@
+{
+	"cli": true,
+	"adapterName": "deutsche-bahn-api-connector",
+	"title": "Deutsche Bahn API Connector",
+	"description": "ioBroker Deutsche Bahn connector server",
+	"keywords": [
+		"Deutsche Bahn",
+		"API",
+		"Connector",
+		"ioBroker",
+		"Rest-API"
+	],
+	"expert": "no",
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "misc-data",
+	"startMode": "daemon",
+	"connectionType": "cloud",
+	"dataSource": "poll",
+	"connectionIndicator": "no",
+	"language": "JavaScript",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"indentation": "Tab",
+	"quotes": "double",
+	"es6class": "yes",
+	"authorName": "dg-services",
+	"authorGithub": "dg-services",
+	"authorEmail": "coding@dg-services.de",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "no",
+	"license": "MIT License",
+	"ci": "gh-actions",
+	"dependabot": "no",
+	"creatorVersion": "1.29.1"
+}

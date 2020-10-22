@@ -1,0 +1,80 @@
+{
+	"common": {
+		"name": "deutsche-bahn-api-connector",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Deutsche Bahn API Connector",
+		"titleLang": {
+			"en": "Deutsche Bahn API Connector",
+			"de": "Deutsche Bahn API Connector",
+			"ru": "Deutsche Bahn API Connector",
+			"pt": "Deutsche Bahn API Connector",
+			"nl": "Deutsche Bahn API Connector",
+			"fr": "Deutsche Bahn API Connector",
+			"it": "Deutsche Bahn API Connector",
+			"es": "Deutsche Bahn API Connector",
+			"pl": "Deutsche Bahn API Connector",
+			"zh-cn": "Deutsche Bahn API Connector"
+		},
+		"desc": {
+			"en": "ioBroker Deutsche Bahn connector server",
+			"de": "ioBroker Deutsche Bahn connector server",
+			"ru": "ioBroker Deutsche Bahn connector server",
+			"pt": "ioBroker Deutsche Bahn connector server",
+			"nl": "ioBroker Deutsche Bahn connector server",
+			"fr": "ioBroker Deutsche Bahn connector server",
+			"it": "ioBroker Deutsche Bahn connector server",
+			"es": "ioBroker Deutsche Bahn connector server",
+			"pl": "ioBroker Deutsche Bahn connector server",
+			"zh-cn": "ioBroker Deutsche Bahn connector server"
+		},
+		"authors": [
+			"dg-services <coding@dg-services.de>"
+		],
+		"keywords": [
+			"Deutsche Bahn",
+			"API",
+			"Connector",
+			"ioBroker",
+			"Rest-API"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "deutsche-bahn-api-connector.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/dg-services/ioBroker.deutsche-bahn-api-connector/master/admin/deutsche-bahn-api-connector.png",
+		"readme": "https://github.com/dg-services/ioBroker.deutsche-bahn-api-connector/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "misc-data",
+		"compact": true,
+		"connectionType": "cloud",
+		"dataSource": "poll",
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
