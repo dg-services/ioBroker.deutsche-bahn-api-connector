@@ -42,9 +42,9 @@ async function getRecentUpdates(evaID){
 }
 
 async function checkWhatToDo(){
-	const currentHour = new Date().getHours;
+	const currentHour = new Date().getHours();
 
-	adapter.log.debug("CheckWhat to do was called");
+	adapter.log.debug("CheckWhat to do was called. TimeStamp: " + currentHour);
 
 	try{
 		if(lastHour != currentHour)	{
