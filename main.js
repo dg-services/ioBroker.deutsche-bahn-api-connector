@@ -12,9 +12,57 @@ const dbXML2ioBroker = require(__dirname + "/lib/deutscheBahnXML2ioBroker");
 let dbConn;
 let dbXML2io;
 let adapter;
-
+let lastHour;
+let evaID;
 // Load your modules here, e.g.:
 // const fs = require("fs");
+
+async function getTimeTable(evaID){
+	await dbConn.getTimeTableData(evaID)
+		.then(dbXML => {
+			dbXML2io.writeTimeTable(dbXML);
+		});
+}
+
+async function getAllUpdates(evaID){
+	await dbConn.getFullUpdate(evaID)
+		.then(dbXML => {
+			dbXML2io.updateTimeTable(dbXML);
+		})
+	;
+}
+
+
+async function getRecentUpdates(evaID){
+	await dbConn.getRecentUpdate(evaID)
+		.then(dbXML => {
+			dbXML2io.updateTimeTable(dbXML);
+		});
+
+}
+
+async function checkWhatToDo(){
+	const currentHour = new Date().getHours;
+
+	adapter.log.debug("CheckWhat to do was called");
+
+	try{
+		if(lastHour != currentHour)	{
+			adapter.log.debug("CheckWhat: Full Update");
+			await getTimeTable(evaID);
+			await getAllUpdates(evaID);
+			await getRecentUpdates(evaID);
+		} else {
+			adapter.log.debug("CheckWhat: RecentUpdate");
+			await getRecentUpdates(evaID);
+
+		}
+	} catch (error) {
+		throw "Nix wars!";
+	}
+
+	lastHour = currentHour;
+}
 
 class DeutscheBahnApiConnector extends utils.Adapter {
 
@@ -41,40 +89,48 @@ class DeutscheBahnApiConnector extends utils.Adapter {
 
 		adapter = this;
 		const localAccessToken 	 = this.config.accessToken;
-		const evaID 		 = adapter.config.evaID;
+		evaID 		 = adapter.config.evaID;
 		dbConn = new dbApiConnector(this,localAccessToken);
 		dbXML2io = new dbXML2ioBroker(this);
 
-		try{
-			await dbConn.getTimeTableData(evaID)
-				.then(dbXML => {
-					this.log.debug("Main dbXML: " + JSON.stringify(dbXML));
-					dbXML2io.writeTimeTable(dbXML);
-				});
-		} catch(error){
-			adapter.log.error(error);
-			throw "Alles Mist! Ich bin raus!";
-		}
+		//		try{
+		// get initial connections from train station
+		//			await dbConn.getTimeTableData(evaID)
+		//				.then(dbXML => {
+		//					//this.log.debug("getTimeTable dbXML: " + JSON.stringify(dbXML));
+		//					dbXML2io.writeTimeTable(dbXML);
+		//				});
+
+		// get initial connections from train station
+		//			await dbConn.getFullUpdate(evaID)
+		//				.then(dbXML => {
+		//					this.log.debug("getFullUpdate dbXML: " + JSON.stringify(dbXML));
+		//					dbXML2io.updateTimeTable(dbXML);
+		//				})
+		//			;
+		// get initial connections from train station
+		//			await dbConn.getRecentUpdate(evaID)
+		//				.then(dbXML => {
+		//					this.log.debug("getRecentUpdate dbXML: " + JSON.stringify(dbXML));
+		//					dbXML2io.updateTimeTable(dbXML);
+		//				})
+		//			;
+		checkWhatToDo();
+		setInterval(checkWhatToDo, 60000);
+
+		//		} catch(error){
+		//			adapter.log.error(error);
+		//			throw "Alles Mist! Ich bin raus!";
+		//		}
 
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
-		await this.setObjectNotExistsAsync("testVariable", {
-			type: "state",
-			common: {
-				name: "testVariable",
-				type: "boolean",
-				role: "indicator",
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
+
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates("testVariable");
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates("lights.*");
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
