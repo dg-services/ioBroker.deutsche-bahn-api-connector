@@ -8,7 +8,9 @@
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
 const dbApiConnector = require(__dirname + "/lib/deutscheBahnApiConnector");
+const dbXML2ioBroker = require(__dirname + "/lib/deutscheBahnXML2ioBroker");
 let dbConn;
+let dbXML2io;
 let adapter;
 
 // Load your modules here, e.g.:
@@ -37,14 +39,18 @@ class DeutscheBahnApiConnector extends utils.Adapter {
 	async onReady() {
 		// Initialize your adapter here
 
-		// Initialize your adapter here
 		adapter = this;
-		//gardenaApi.setAdapter(this);
-		dbConn = new dbApiConnector(this);
-
+		const localAccessToken 	 = this.config.accessToken;
+		const evaID 		 = adapter.config.evaID;
+		dbConn = new dbApiConnector(this,localAccessToken);
+		dbXML2io = new dbXML2ioBroker(this);
 
 		try{
-			await dbConn.start();
+			await dbConn.getTimeTableData(evaID)
+				.then(dbXML => {
+					this.log.debug("Main dbXML: " + JSON.stringify(dbXML));
+					dbXML2io.writeTimeTable(dbXML);
+				});
 		} catch(error){
 			adapter.log.error(error);
 			throw "Alles Mist! Ich bin raus!";
