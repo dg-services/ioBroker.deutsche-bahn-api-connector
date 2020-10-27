@@ -27,7 +27,7 @@
     "moment": "^2.29.1"
   },
   "optionalDependencies": {
-  "fsevents": "2.1.2"
+    "fsevents": "2.1.2"
   },
   "devDependencies": {
     "@iobroker/testing": "^2.3.0",
