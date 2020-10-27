@@ -9,6 +9,8 @@
 const utils = require("@iobroker/adapter-core");
 const dbApiConnector = require(__dirname + "/lib/deutscheBahnApiConnector");
 const dbXML2ioBroker = require(__dirname + "/lib/deutscheBahnXML2ioBroker");
+
+let thisInstance;
 let dbConn;
 let dbXML2io;
 let adapter;
@@ -44,16 +46,16 @@ async function getRecentUpdates(evaID){
 async function checkWhatToDo(){
 	const currentHour = new Date().getHours();
 
-	adapter.log.debug("CheckWhat to do was called. TimeStamp: " + currentHour);
+	thisInstance.log.debug("CheckWhat to do was called. TimeStamp: " + currentHour);
 
 	try{
 		if(lastHour != currentHour)	{
-			adapter.log.debug("CheckWhat: Full Update");
+			thisInstance.log.debug("CheckWhat: Full Update");
 			await getTimeTable(evaID);
 			await getAllUpdates(evaID);
 			await getRecentUpdates(evaID);
 		} else {
-			adapter.log.debug("CheckWhat: RecentUpdate");
+			thisInstance.log.debug("CheckWhat: RecentUpdate");
 			//await getTimeTable(evaID);
 			await getRecentUpdates(evaID);
 
@@ -87,42 +89,39 @@ class DeutscheBahnApiConnector extends utils.Adapter {
 	 */
 	async onReady() {
 		// Initialize your adapter here
+		thisInstance = this;
 
-		adapter = this;
 		const localAccessToken 	 = this.config.accessToken;
-		evaID 		 = adapter.config.evaID;
+		evaID 					 = this.config.evaID;
+
 		dbConn = new dbApiConnector(this,localAccessToken);
 		dbXML2io = new dbXML2ioBroker(this);
 
-		//		try{
-		// get initial connections from train station
-		//			await dbConn.getTimeTableData(evaID)
-		//				.then(dbXML => {
-		//					//this.log.debug("getTimeTable dbXML: " + JSON.stringify(dbXML));
-		//					dbXML2io.writeTimeTable(dbXML);
-		//				});
+		try {
+			if(evaID == ""){
+				thisInstance.log.error("Kein Bahnhof hinterlegt");
+				adapter.terminate("Kein Bahnhof hinterlegt");
+				throw 3;
+			}
 
-		// get initial connections from train station
-		//			await dbConn.getFullUpdate(evaID)
-		//				.then(dbXML => {
-		//					this.log.debug("getFullUpdate dbXML: " + JSON.stringify(dbXML));
-		//					dbXML2io.updateTimeTable(dbXML);
-		//				})
-		//			;
-		// get initial connections from train station
-		//			await dbConn.getRecentUpdate(evaID)
-		//				.then(dbXML => {
-		//					this.log.debug("getRecentUpdate dbXML: " + JSON.stringify(dbXML));
-		//					dbXML2io.updateTimeTable(dbXML);
-		//				})
-		//			;
+			if(localAccessToken == ""){
+				thisInstance.log.error("Kein AuthToken hinterlegt");
+				adapter.terminate("Kein AuthTokendd hinterlegt");
+				throw 3;
+			}
+		} catch (error) {
+			thisInstance.log.error("Es ist ein Fehler aufgetreten: "+error);
+			switch (error){
+				case 3:
+					process.exit(3);
+					break;
+				default:
+					process.exit(3);
+			}
+		}
+
 		checkWhatToDo();
 		setInterval(checkWhatToDo, 60000);
-
-		//		} catch(error){
-		//			adapter.log.error(error);
-		//			throw "Alles Mist! Ich bin raus!";
-		//		}
 
 		/*
 		For every state in the system there has to be also an object of type state
