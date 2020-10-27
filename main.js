@@ -54,6 +54,7 @@ async function checkWhatToDo(){
 			await getRecentUpdates(evaID);
 		} else {
 			adapter.log.debug("CheckWhat: RecentUpdate");
+			//await getTimeTable(evaID);
 			await getRecentUpdates(evaID);
 
 		}
