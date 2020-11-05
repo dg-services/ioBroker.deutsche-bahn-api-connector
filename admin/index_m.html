@@ -57,6 +57,45 @@
 			});
 			callback(obj);
 		}
+		
+		function searchTrainStation(){
+
+			const $authToken = document.getElementById('accessToken').value;
+			const $searchString = document.getElementById('stationSearch').value;
+			//alert($searchString);
+
+			const url = "https://api.deutschebahn.com/timetables/v1/station/"+$searchString;
+
+			//alert(url);
+
+			var request = new XMLHttpRequest()
+
+			// Open a new connection, using the GET request on the URL endpoint
+				request.open('GET', url, true)
+			   
+				request.setRequestHeader("Authorization","Bearer "+ $authToken);
+				request.setRequestHeader("Accept", "application/json");
+
+				request.onload = function () {
+					if (request.status >= 200 && request.status < 400) {
+						xmlDoc = this.responseXML;
+						
+						//alert(xmlDoc.getElementsByTagName("station").length);
+
+						if(xmlDoc.getElementsByTagName("station").length > 0){
+							document.getElementById("evaID").value = xmlDoc.getElementsByTagName("station")[0].getAttribute('eva');
+							document.getElementById("stationSearch").value = xmlDoc.getElementsByTagName("station")[0].getAttribute('name');
+							if (M) M.updateTextFields();
+						} else {
+							alert ("Kein Bahnhof gefunden! Bitte Suchparameter anpassen");
+						}
+					} else {
+					  alert('Request fehlerhaft');
+					}
+				}
+				// Send request
+				request.send()
+		}
 	</script>
 
 </head>
@@ -74,14 +113,23 @@
 		<!-- Put your content here -->
 
 		<!-- For example columns with settings: -->
-		<div class="row">
-			<div class="col s6 input-field">
-				<input type="text" class="value" id="evaID" />
-				<label for="evaID" class="translate">evaID</label>
-			</div>
+		
+
+		
+		<div class="col">
 			<div class="col s6 input-field">
 				<input type="text" class="value" id="accessToken" />
 				<label for="accessToken" class="translate">accessToken</label>
+			</div>
+			<DIV>Bitte Bahnhofsname als Suchparameter eingeben oder direkt EVA-Nr angeben.</DIV>
+			<div class="col s6 input-field">
+				<input type="text" class="value" id="stationSearch" />
+				<label for="stationSearch" class="translate">stationSearch</label>
+				<input type="button" value="Eva ID suchen" onclick="searchTrainStation()" id="startSearch" class="btn btn-active">
+			</div>
+			<div class="col s6 input-field">
+				<input type="text" class="value" id="evaID" />
+				<label for="evaID" class="translate">evaID</label>
 			</div>
 			<br>
 		</div>

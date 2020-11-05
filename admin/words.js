@@ -6,6 +6,18 @@ systemDictionary = {
 		"en": "Adapter settings for deutsche-bahn-api-connector",
 		"de": "Adaptereinstellungen für deutsche-bahn-api-connector"
 	},
+	"station": {
+		"en": "Station Selector",
+		"de": "Bahnhofsauswahl"
+	},
+	"startSearch": {
+		"en": "Search for station",
+		"de": "Bahnhof suchen"
+	},
+	"stationSearch": {
+		"en": "Please enter a station Name",
+		"de": "Bitte Bahnhofsname eingeben"
+	},
 	"evaID": {
 		"en": "Train Station ID",
 		"de": "BahnhofsID"
